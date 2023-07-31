@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install git+https://github.com/databricks/clean-room-orchestration -q
+# MAGIC %pip install git+https://github.com/databricks/clean-room-orchestration@v0.1 -q
 
 # COMMAND ----------
 
