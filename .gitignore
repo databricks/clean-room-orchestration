@@ -3,4 +3,5 @@ dist/
 
 .databricks
 .vscode
+.idea
 typings
