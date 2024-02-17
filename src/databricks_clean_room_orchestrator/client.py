@@ -132,6 +132,21 @@ class CleanRoomRestClient:
     return results.json()
 
   """
+  Sets up notebook job run with retry
+  """
+  def setupNotebookJobRunWithRetry(self, clean_room: str, station_name: str) -> dict:
+    max_attempts = 3
+    attempt = 0
+    while attempt < max_attempts:
+      try:
+        return self.setupStationResource(clean_room, station_name, Resource.NOTEBOOK_JOB_RUN)
+      except:
+        attempt += 1
+        if attempt == max_attempts:
+          raise Exception("Failed to setup notebook job run, please try again later.") from e
+        time.sleep(30)
+
+  """
   Gets station workspace status
   """
   def getStationWorkspaceStatus(self, clean_room: str, station_name: str) -> dict:
@@ -282,7 +297,7 @@ class CleanRoomClient:
 
     # Run the clean room notebook
     print("Setting up station notebook job run")
-    self._rest_client.setupStationResource(self._clean_room, self._station_name, Resource.NOTEBOOK_JOB_RUN)
+    self._rest_client.setupNotebookJobRunWithRetry(self._clean_room, self._station_name)
     print("Waiting for clean room notebook to finish running...")
     state = None
     while True:
