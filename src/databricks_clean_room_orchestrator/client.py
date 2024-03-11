@@ -273,6 +273,10 @@ class CleanRoomClient:
       if (response["workspace_status"] != "PROVISIONING"):
         raise RuntimeError("Workspace could not be provisioned")
       time.sleep(10)
+    
+    # Finalize station workspace setup to update the workspace detail.
+    print("Finalize station workspace setup")
+    self._rest_client.setupStationResource(self._clean_room, self._station_name, Resource.WORKSPACE)
     print("Setting up station collaborator shares")
     self._rest_client.setupStationResource(self._clean_room, self._station_name, Resource.COLLABORATOR_SHARES)
     print("Setting up station notebook service principal")
