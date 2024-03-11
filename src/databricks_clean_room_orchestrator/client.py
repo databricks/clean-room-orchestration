@@ -286,7 +286,17 @@ class CleanRoomClient:
 
     # Run the clean room notebook
     print("Setting up station notebook job run")
-    self._rest_client.setupStationResource(self._clean_room, self._station_name, Resource.NOTEBOOK_JOB_RUN)
+    while True:
+      try:
+        self._rest_client.setupStationResource(self._clean_room, self._station_name, Resource.NOTEBOOK_JOB_RUN)
+      except HTTPError as e:
+        if "has been cancelled or is not active yet" in e.strerror:
+          print("Organization is not active yet. Retrying request.")
+        else:
+          raise e
+      else:
+        break
+      time.sleep(10)
     print("Waiting for clean room notebook to finish running...")
     state = None
     while True:
